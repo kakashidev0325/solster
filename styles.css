@@ -1,6 +1,6 @@
 /* ============================================================
-   Baby Asteroid — $BABYASTEROID
-   Space theme: deep navy, gold, cyan
+   Solana Roadster — $SOLSTER
+   Night theme: deep navy, gold, cyan
    ============================================================ */
 
 :root {
@@ -242,11 +242,11 @@ a { color: inherit; }
   color: var(--muted);
 }
 .hero__title-line--big {
-  font-size: clamp(72px, 12vw, 132px);
+  font-size: clamp(54px, 8.6vw, 100px);
   line-height: .86;
   color: var(--yellow);
   text-shadow: 0 8px 0 rgba(0,0,0,.35), 0 0 28px rgba(255,193,7,.35);
-  letter-spacing: .02em;
+  letter-spacing: .01em;
 }
 .hero__title-line--name {
   margin-top: 4px;

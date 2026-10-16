@@ -36,15 +36,35 @@ def cover(base, box, sample):
     base.paste(patch, (x0, y0), mask)
 
 
-def dim_cyan(im, box):
-    """Knock out bright cyan lettering on a tower without repainting the facade."""
+def erase_gray_text(im, box):
+    """Replace pale wall lettering with the nearest dark concrete to its left."""
     x0, y0, x1, y1 = box
     px = im.load()
     for y in range(y0, y1):
-        for x in range(x0, x1):
+        for x in range(x1 - 1, x0 - 1, -1):
             r, g, b = px[x, y]
-            if b > 165 and g > 145 and b > r + 25 and g > r + 8:
-                px[x, y] = (int(r * 0.32), int(g * 0.22), int(b * 0.26))
+            if (r + g + b) / 3 <= 30:
+                continue
+            sx = x
+            while sx > x0 - 24 and (px[sx, y][0] + px[sx, y][1] + px[sx, y][2]) / 3 > 26:
+                sx -= 1
+            sample = px[sx, y]
+            if (sample[0] + sample[1] + sample[2]) / 3 > 26 or sample[0] > 40:
+                px[x, y] = (12, 11, 22)
+            else:
+                px[x, y] = sample
+
+
+def erase_cyan_sign(im, box, fill=(7, 14, 48)):
+    """Remove a glowing sign, including its halo, and leave the dark facade."""
+    x0, y0, x1, y1 = box
+    px = im.load()
+    w, h = im.size
+    for y in range(max(0, y0), min(h, y1)):
+        for x in range(max(0, x0), min(w, x1)):
+            r, g, b = px[x, y]
+            if (r + g + b) / 3 > 36 or (b > 90 and b > r + 15 and g > 50):
+                px[x, y] = fill
 
 
 def tracked(draw, text, xy, font, fill, tracking, anchor="mm"):
@@ -71,12 +91,9 @@ def tracked(draw, text, xy, font, fill, tracking, anchor="mm"):
 def build_banner():
     im = Image.open(USER_BANNER).convert("RGB")
     # Hide the old wall tagline under the SOLANA wordmark.
-    cover(im, (136, 124, 336, 192), (62, 158, 124, 198))
+    erase_gray_text(im, (140, 116, 332, 172))
     # Hide the right-hand slogan stack in the sky.
     cover(im, (900, 18, 1018, 142), (760, 8, 880, 70))
-    # Hide the "BUILD ON SOLANA" tower sign.
-    dim_cyan(im, (708, 96, 802, 172))
-
     im = im.resize((1500, 500), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(im)
     sx, sy = 1500 / 1024, 500 / 341
@@ -86,8 +103,8 @@ def build_banner():
     wall_fill = (198, 204, 220)
     sky_fill = (232, 236, 246)
 
-    cx = int(228 * sx)
-    y = int(136 * sy)
+    cx = int(230 * sx)
+    y = int(126 * sy)
     for line in ("ROADSTER", "$SOLSTER"):
         tracked(draw, line, (cx, y), wall, wall_fill, 3.4, "mt")
         y += 20
@@ -102,6 +119,9 @@ def build_banner():
 
     im.save(os.path.join(OUT, "banner.png"), "PNG", optimize=True)
     im.save(os.path.join(ROOT, "banner.png"), "PNG", optimize=True)
+    im.crop((160, 70, 640, 340)).save(os.path.join(PRE, "wall-final.png"))
+    im.crop((980, 70, 1320, 280)).save(os.path.join(PRE, "sign-final.png"))
+    im.crop((1280, 10, 1500, 220)).save(os.path.join(PRE, "sky-final.png"))
 
     # Social card: blurred full-bleed behind the sharp banner.
     bg = im.resize((1200, 630), Image.Resampling.LANCZOS).filter(ImageFilter.GaussianBlur(18))
@@ -117,7 +137,6 @@ def build_mark_and_portrait():
     mark.save(os.path.join(OUT, "mark.png"), "PNG", optimize=True)
 
     port = Image.open(PORT_SRC).convert("RGB")
-    dim_cyan(port, (680, 390, 840, 500))
     port.save(os.path.join(OUT, "portrait.png"), "PNG", optimize=True)
 
 
@@ -159,33 +178,8 @@ def build_mascot():
 
 def build_icons():
     src = Image.open(MARK_SRC).convert("RGB")
-    # The glowing bars sit on the upper-left wall of the hero mark.
-    px = src.load()
-    w, h = src.size
-    xs, ys = [], []
-    for y in range(0, int(h * 0.48)):
-        for x in range(0, int(w * 0.48)):
-            r, g, b = px[x, y]
-            mx, mn = max(r, g, b), min(r, g, b)
-            cyan = g > 150 and b > 140 and g > r + 20
-            purple = b > 140 and r > 90 and r > g + 15 and b > g
-            if mx > 150 and (mx - mn) > 60 and (cyan or purple):
-                xs.append(x)
-                ys.append(y)
-    if not xs:
-        raise SystemExit("logo bars not found")
-    x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
-    # pad the crop so the glow is included
-    pad = int(max(x1 - x0, y1 - y0) * 0.28)
-    x0, y0 = max(0, x0 - pad), max(0, y0 - pad)
-    x1, y1 = min(w, x1 + pad), min(h, y1 + pad)
-    # square crop centered on the bars
-    cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
-    side = max(x1 - x0, y1 - y0)
-    # extra margin so a circular nav crop does not clip the bars
-    side = int(side * 1.35)
-    half = side // 2
-    crop = src.crop((cx - half, cy - half, cx + half, cy + half))
+    # Tight wall crop of the three glowing bars. Square, with margin for the circular nav mask.
+    crop = src.crop((24, 4, 336, 316))
     crop.save(os.path.join(PRE, "icon-source.png"))
 
     def save_icon(size, path):

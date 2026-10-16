@@ -1,5 +1,5 @@
 /* ============================================================
-   Sticker overlay — drop a picture, put Baby Asteroid on it.
+   Sticker overlay — drop a picture, put Solana Roadster on it.
 
    The companion to the space PFP builder. Everything here is
    namespaced `hh` so the two tools can share a page.
@@ -210,7 +210,7 @@
     clean(function (b, ext) {
       var a = document.createElement("a");
       a.href = URL.createObjectURL(b);
-      a.download = "baby-asteroid-" + Date.now() + "." + ext;
+      a.download = "solster-" + Date.now() + "." + ext;
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
     });

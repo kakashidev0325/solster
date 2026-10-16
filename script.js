@@ -1,5 +1,5 @@
 /* ============================================================
-   Baby Asteroid — $BABYASTEROID
+   Solana Roadster — $SOLSTER
    Site config + interactions
    ============================================================ */
 
@@ -10,16 +10,16 @@
      · empty link      → button points at the X account instead
    ───────────────────────────────────────────────────────────── */
 const CONFIG = {
-  // Solana mint address.
-  contract: "GiMcbhXRvPZC2QrwjVYEPuLm4Bxm4NxwrvuqamP3pump",
+  // Solana mint address. Leave empty until the $SOLSTER mint is published.
+  contract: "",
 
   // Trading + chart links
-  buy:      "https://pump.fun/coin/GiMcbhXRvPZC2QrwjVYEPuLm4Bxm4NxwrvuqamP3pump",
-  chart:    "https://dexscreener.com/solana/GiMcbhXRvPZC2QrwjVYEPuLm4Bxm4NxwrvuqamP3pump",
-  scan:     "https://solscan.io/token/GiMcbhXRvPZC2QrwjVYEPuLm4Bxm4NxwrvuqamP3pump",
+  buy:      "",
+  chart:    "",
+  scan:     "",
 
   // Socials
-  twitter:  "https://x.com/BabyAsteroidsol",
+  twitter:  "",
   telegram: "",
 
   supply:   "",

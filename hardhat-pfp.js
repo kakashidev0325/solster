@@ -1,7 +1,7 @@
 /* ============================================================
-   Space PFP — build a Baby Asteroid portrait.
+   Roadster PFP — build a Solana Roadster portrait.
 
-   The pup is fixed: same cutout, same size, same position in
+   The car is fixed: same cutout, same size, same position in
    every export. Only the colours and the backdrop change.
 
    Runs entirely client-side; nothing is ever uploaded.
@@ -138,7 +138,7 @@
 
     paintBackdrop();
 
-    // halo behind the pup, in the chosen glow colour
+    // halo behind the car, in the chosen glow colour
     var halo = ctx.createRadialGradient(OUT / 2, OUT * 0.52, 20, OUT / 2, OUT * 0.52, INNER);
     halo.addColorStop(0, rgba(state.glow, 0.5));
     halo.addColorStop(0.45, rgba(state.glow, 0.16));
@@ -146,13 +146,13 @@
     ctx.fillStyle = halo;
     ctx.fillRect(0, 0, OUT, OUT);
 
-    // Baby — identical placement every time
+    // Roadster — identical placement every time
     if (sueReady) {
       var s = INNER * 2 * 0.9;
       ctx.drawImage(sue, OUT / 2 - s / 2, OUT / 2 - s / 2 + INNER * 0.02, s, s);
     }
 
-    // vignette so she always sits into the frame the same way
+    // vignette so the car always sits into the frame the same way
     var vig = ctx.createRadialGradient(OUT / 2, OUT / 2, INNER * 0.62, OUT / 2, OUT / 2, INNER);
     vig.addColorStop(0, "rgba(0,0,0,0)");
     vig.addColorStop(1, "rgba(0,0,0,0.34)");
@@ -174,7 +174,7 @@
   }
 
   function drawBadge() {
-    var text = "$BABYASTEROID";
+    var text = "$SOLSTER";
     ctx.save();
     ctx.font = '400 30px "Titan One", "Arial Black", Impact, sans-serif';
     ctx.textAlign = "center";
@@ -298,7 +298,7 @@
     blobOut(function (b, ext) {
       var a = document.createElement("a");
       a.href = URL.createObjectURL(b);
-      a.download = "baby-asteroid-pfp-" + Date.now() + "." + ext;
+      a.download = "solster-pfp-" + Date.now() + "." + ext;
       a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
     });
