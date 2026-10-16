@@ -10,17 +10,17 @@
      · empty link      → button points at the X account instead
    ───────────────────────────────────────────────────────────── */
 const CONFIG = {
-  // Solana mint address. Leave empty until the $SOLSTER mint is published.
-  contract: "",
+  // Solana mint address.
+  contract: "GpDvSvNdwx8VRK7JimFdtqAufjckLUPFB9Ht63qrpump",
 
   // Trading + chart links
-  buy:      "",
-  chart:    "",
-  scan:     "",
+  buy:      "https://pump.fun/coin/GpDvSvNdwx8VRK7JimFdtqAufjckLUPFB9Ht63qrpump",
+  chart:    "https://dexscreener.com/solana/GpDvSvNdwx8VRK7JimFdtqAufjckLUPFB9Ht63qrpump",
+  scan:     "https://solscan.io/token/GpDvSvNdwx8VRK7JimFdtqAufjckLUPFB9Ht63qrpump",
 
   // Socials
-  twitter:  "",
-  telegram: "",
+  twitter:  "https://x.com/solster_x",
+  telegram: "https://t.me/solster_tg",
 
   supply:   "",
 };
